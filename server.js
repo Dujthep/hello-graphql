@@ -1,10 +1,12 @@
 var express = require('express');
 var cors = require('cors')
+const path = require("path");
 var { graphqlHTTP } = require('express-graphql');
 const graphql = require('graphql');
 var app = express();
 
 app.use(cors())
+app.use(express.static(path.join(__dirname, "public")));
 
 var fakeDatabase = [
   { id: 0, fullName: 'Dujthep Taichan', nickName: 'Stop' },
