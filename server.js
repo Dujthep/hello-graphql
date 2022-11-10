@@ -8,13 +8,20 @@ app.use(cors())
 
 var fakeDatabase = [
   { id: 0, fullName: 'Dujthep Taichan', nickName: 'Stop' },
-  { id: 1, fullName: 'Test Test', nickName: 'Rain' }
 ];
 
 var informationType = new graphql.GraphQLObjectType({
   name: 'Information',
   fields: {
     id: { type: graphql.GraphQLInt },
+    fullName: { type: graphql.GraphQLString },
+    nickName: { type: graphql.GraphQLString },
+  }
+});
+
+var informationInput = new graphql.GraphQLInputObjectType({
+  name: 'InformationInput',
+  fields: {
     fullName: { type: graphql.GraphQLString },
     nickName: { type: graphql.GraphQLString },
   }
@@ -28,22 +35,52 @@ var queryType = new graphql.GraphQLObjectType({
       args: {
         id: { type: graphql.GraphQLInt }
       },
-      resolve: (_, {id}) => {
+      resolve: (_, { id }) => {
         return fakeDatabase.find(r => r.id == id);
       }
-    }, 
+    },
     getAll: {
       type: new graphql.GraphQLList(informationType),
       resolve: () => {
         return fakeDatabase;
       }
+    },
+    createInformation: {
+      type: informationType,
+      args: {
+        input: {
+          type: new graphql.GraphQLNonNull(informationInput)
+        }
+      },
+      resolve: (_, { input }) => {
+        const data = { ...input, id: fakeDatabase.length };
+        fakeDatabase.push(data)
+        return data;
+      }
+    },
+    updateInformation: {
+      type: informationType,
+      args: {
+        id: { type: graphql.GraphQLInt },
+        input: {
+          type: new graphql.GraphQLNonNull(informationInput)
+        }
+      },
+      resolve: (_, { id, input }) => {
+        const idx = fakeDatabase.findIndex(r => id == r.id);
+        if(idx === -1) {
+          throw new Error('No information exits with id ' + id)
+        }
+        const data = { ...input, id };
+        fakeDatabase.splice(idx, 1, data);
+        return data;
+      }
     }
   }
 });
 
-var schema = new graphql.GraphQLSchema({query: queryType});
+var schema = new graphql.GraphQLSchema({ query: queryType });
 
-var app = express();
 app.use('/graphql', graphqlHTTP({
   schema: schema,
   graphiql: true,
