@@ -3,12 +3,6 @@ env:
   variables:
     APP_NAME: "hello-graphql"
 phases:
-  install:
-    runtime-versions:
-      nodejs: 16.x
-    commands:
-      - echo install process started
-      - npm install
   post_build:
     commands:
       - echo build process finished, we should upload to S3 now
