@@ -9,10 +9,6 @@ phases:
     commands:
       - echo install process started
       - npm install
-  build:
-    commands:
-      - echo build process started now
-      - npm start
   post_build:
     commands:
       - echo build process finished, we should upload to S3 now
