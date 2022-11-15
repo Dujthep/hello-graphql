@@ -19,8 +19,3 @@ phases:
       - cd dist/$APP_NAME
       - ls -la
       - aws s3 sync . s3://codepipeline-ap-southeast-1-376047783232 --delete
-# artifacts:
-#   files:
-#     - '**/*'
-#   name: BuildArtifact
-#   discard-paths: yes
