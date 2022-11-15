@@ -12,6 +12,5 @@ phases:
   post_build:
     commands:
       - echo build process finished, we should upload to S3 now
-      - cd dist/$APP_NAME
       - ls -la
       - aws s3 sync . s3://codepipeline-ap-southeast-1-376047783232 --delete
